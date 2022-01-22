@@ -1,0 +1,13 @@
+A feladat megoldásához bevezettem egy Task osztályt, ami tartalmazza a taszk nevét és az utatításait. A beolvasásnál egy Task-okat tartalmazó tömbben tárolom a bemenetről érkező információkat(tasks). Ezen kívül jelzem, hogy a különböző erőforrások az aktuális pillanatban le vannak-e foglalva (eroforrasok distionary). Az utolsó fontosabb változóm maga a gráf (graph), amit egy olyan dictionary-val valósítottam meg, akol a kulcs egy csúcsot reprezentál, és az érték prdig egy olyan tömb, amiben a többi csúcs szerepel, ahova a kulcs-ból él vezet. Például {"T1":["R1", "R2"]} -> T1-R1 és T1-R2 között él található.
+
+Beolvasás után kiegészítettem üres műveletekkel a rövidebb taszkokat, és létrehoztam az üres gráfot.
+
+Ezután a taszkokat lépésenként néztem, hogy milyen műveletet hajtanak végre:
+- Üres művelet: ha mág a taszk fog érdemi műveletet csinálni, akkor lép, ha viszont befejezte a futását (már csak 0 értékek vannak), és nem szabadított fel erőforrást, akkor azt felszabadítja és a várakozó taszkokat is a megfelelő állapotba rakja.
+- Felszabadítás: törli a megfelelő élt a gráfból és felszabadítja az erőforrást. Kezeli ha valamelyik taszk várakozott az erőforrásra és ilyenkor az megkapja.
+- Foglalás: Ha az erőforrás szabad, akkor lefoglalja. Ilyenkor nem alakulhat ki kör, mert senki se várakozhat az adott erőforrásra. Ha az erőforrás már foglalt, akkor megvizsgálja, hogy a plusz éllel körmentes lenne-e a gráf. Ha igen, akkor beilleszti a megfelelő élt, ha viszont nem, akkor elutasítja a foglalást, és kiírja a konzolra.
+
+Kör detektálása irányított gráfban:
+Ezt a részt mélységi bejárással oldottam meg. 2 függvény tartozik az eljáráshoz:
+- isCyclic: megnézi, hogy minden érintetlen csúccsal kezdve kaphatunk-e kört az új élt is tartalmazó gráfban.
+- isCyclicUtil: a megadott élből kiindulva DFS algoriitmussal megnézi, hogy van-e kör benne. Ezt rekurzívan csinálja, egy változóban nyilván tartom, hogy melyik éleken jártunk már, ebből nem törlök, és az adott élnél egy másik tömbben (recStack) fel vannak sorolva az adott éltől mélységben magasabban levő csúcsok. A recStack-ból töröljük azt az elemely, mellyel nem találtunk kört, viszont a látogatott elemek csak bővülhetnek. Ha egy csúcs a rekurzió során benne van a visited és a recStack tömbben is, az azt jelenti, hogy kör van a gráfban, amely esetben az utolsó élt nem lehet hozzáadni a holtpont elkerüléséhez. 
